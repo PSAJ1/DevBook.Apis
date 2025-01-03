@@ -1,0 +1,28 @@
+{
+  "name": "devbook.apis",
+  "version": "1.0.0",
+  "description": "It is a type of social media for developer(Devbook) just like a facebook. ",
+  "main": "index.js",
+  "scripts": {
+    "start": "node public/app.js",
+    "dev": "nodemon public/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PSAJ1/DevBook.Apis.git"
+  },
+  "keywords": [
+    "Devbook",
+    "nodejs",
+    "javascript"
+  ],
+  "author": "Pankaj Shah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PSAJ1/DevBook.Apis/issues"
+  },
+  "homepage": "https://github.com/PSAJ1/DevBook.Apis#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
