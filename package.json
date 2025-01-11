@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/PSAJ1/DevBook.Apis#readme",
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "mongoose": "^8.9.4"
   }
 }
