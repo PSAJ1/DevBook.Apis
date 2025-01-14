@@ -24,7 +24,7 @@ function auth(req,res,next){
             res.status(401).send("Access denied");
         }
     }
-    else if(req.path.startsWith('/login') || req.path.startsWith('/login/admin') || req.path.startsWith('/signup')){
+    else if(req.path.startsWith('/login') || req.path.startsWith('/login/admin') || req.path.startsWith('/signup')|| req.path.startsWith('/feed')){
         next()
     }
 }

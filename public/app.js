@@ -5,21 +5,13 @@ const User = require('./model/user.js');
 const app = express()
 
 app.use("/",auth);
+app.use(express.json());
 
 app.post("/signup",async(req,res,next)=>{
     try{
+        //console.log(req.body);
         const user=new User(
-            {
-                firstName:"Pankaj",
-                lastName:"Shah",
-                gender:1,
-                age:26,
-                dateOfBirth:"29/4/1999",
-                phoneNumber:6375957804,
-                country:"India",
-                email:"pankajshah@dbdevbook.com",
-                password:"devbook_db@ps"
-            }
+            req.body
         );
         await user.save();
         res.send("User created successfully");
@@ -29,11 +21,77 @@ app.post("/signup",async(req,res,next)=>{
     }
 });
 
+app.get("/feed",async(req,res,next)=>{
+    try{
+        console.log(req.body);
+        let user=await User.find(req.body);
+        res.send(user);
+    }
+    catch(e){
+        res.status(501).send("Users not found "+e.message);
+    }
+});
+
+app.get("/user",async(req,res,next)=>{
+    try{
+        //console.log(req.body);
+        let user=await User.findOne(req.body);
+        res.send(user);
+    }
+    catch(e){
+        res.status(501).send("User not found "+e.message);
+    }
+});
+
+app.get("/user/:id",async(req,res,next)=>{
+    try{
+        //console.log(req.params);
+        let user=await User.findById(req.params.id);
+        res.send(user);
+    }
+    catch(e){
+        res.status(400).send("User not found "+e.message);
+    }
+});
+
+app.delete("/user/:id",async(req,res,next)=>{
+    try{
+        //console.log(req.params);
+        let user=await User.findByIdAndDelete(req.params.id);
+        res.send(user);
+    }
+    catch(e){
+        res.status(400).send("User not found "+e.message);
+    }
+});
+
+app.patch("/user/:id",async(req,res,next)=>{
+    try{
+        console.log("User update by id API");
+        let user=await User.findByIdAndUpdate(req.params.id,req.body,{returnDocument:"after"});
+        res.send(user);
+    }
+    catch(e){
+        res.status(400).send("User not found "+e.message);
+    }
+});
+
+app.patch("/user",async(req,res,next)=>{
+    try{
+        console.log("User update by email API");
+        let user=await User.findOneAndUpdate({email:req.body.email},req.body);
+        res.send(user);
+    }
+    catch(e){
+        res.status(400).send("User not found "+e.message);
+    }
+});
+
 //All error handling
 app.use('/',(err,req,res,next)=>{
     console.log("Error handling start");
     //error handling
-    res.status(500).send('Something went wrong');   
+    res.status(500).send('Something went wrong '+err.message);   
     console.log("Error handling end");    
 })
 
