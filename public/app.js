@@ -13,7 +13,7 @@ app.post("/signup",async(req,res,next)=>{
         const user=new User(
             req.body
         );
-        await user.save();
+        await user.save({ timestamps: { createdAt: true, updatedAt: false } });
         res.send("User created successfully");
     }
     catch(e){
@@ -68,7 +68,7 @@ app.delete("/user/:id",async(req,res,next)=>{
 app.patch("/user/:id",async(req,res,next)=>{
     try{
         console.log("User update by id API");
-        let user=await User.findByIdAndUpdate(req.params.id,req.body,{returnDocument:"after"});
+        let user=await User.findByIdAndUpdate(req.params.id,req.body,{returnDocument:"after",runValidators:true});
         res.send(user);
     }
     catch(e){
@@ -79,7 +79,7 @@ app.patch("/user/:id",async(req,res,next)=>{
 app.patch("/user",async(req,res,next)=>{
     try{
         console.log("User update by email API");
-        let user=await User.findOneAndUpdate({email:req.body.email},req.body);
+        let user=await User.findOneAndUpdate({email:req.body.email},req.body,{runValidators:true});
         res.send(user);
     }
     catch(e){
