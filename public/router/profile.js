@@ -19,8 +19,12 @@ router.patch("/edit",userAuth,async(req,res,next)=>{
     try{
         if(!ValidationForUpdateProfile(req))
             throw new Error("Validation Failed");
-        
-        res.send("Profile "+req.user.getUserFullName());
+
+        let updateUser=new User({
+            ...req.body
+        });
+        let u=await User.findByIdAndUpdate(req.user.getUserId(),req.body,{returnDocument:"after",runValidators:true});
+        res.send(u)
     }
     catch(e){
         res.status(501).send("Users not found "+e.message);
