@@ -1,32 +1,27 @@
-function auth(req,res,next){
-    if(req.path.startsWith('/admin')){
-        if('pass' === 'pass'){
-            console.log('Admin auth :- Admin Auth');
-            try{
-                throw new Error();
-            }
-            catch(e){
-                console.log('Handling error in catch');
-                next(e);
-            }
-        }
-        else{
-            res.status(401).send("Access denied");
-        }
+const jwt=require("jsonwebtoken");
+const User=require("../public/model/user");
+async function userAuth(req,res,next){
+    try{
+        let token = req.cookies.badge;
+        if(!token)
+            throw new Error("Token is not valid");
+
+        let userId=jwt.verify(token,"db@devBook_.2923");
+
+        let user=await User.findById(userId,"id firstName lastName email");
+        if(!user)
+            throw new Error("Unauthorized user");
+        req.user={
+            getUserId:()=>user.id,
+            getUserEmail:()=>user.email,
+            getUserFirstName:()=>user.firstName,
+            getUserFullName:()=>user.firstName +" "+ user.lastName,
+        };
+        next();
     }
-    else if(req.path.startsWith('/user'))
-    {
-        if('pass' === 'pass'){
-            console.log('User auth :- User Auth');
-            next()
-        }
-        else{
-            res.status(401).send("Access denied");
-        }
-    }
-    else if(req.path.startsWith('/login') || req.path.startsWith('/login/admin') || req.path.startsWith('/signup')|| req.path.startsWith('/feed')){
-        next()
+    catch(err){
+        res.send("Error found:- "+err.message);
     }
 }
 
-module.exports= auth;
+module.exports= userAuth;
