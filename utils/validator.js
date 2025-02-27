@@ -15,4 +15,30 @@ function ValidationForUpdateProfile(req){
     isValid=true;
     return isValid;
 }
-module.exports={Validation,ValidationForUpdateProfile};
+
+function ValidationForURL_SendConnection(req,res,next){
+    try{
+        const allowedStatus = ['0','1'];
+        let status=req.params.status;
+        if(status && !allowedStatus.includes(status))
+            throw new Error("Bad Request");
+        next();
+    }
+    catch(e){
+        res.status(400).json({message:'falied',status:false,data:null});
+    }
+}
+
+function ValidationForURL_ReviewConnection(req,res,next){
+    try{
+        const allowedStatus = ['2','3'];
+        let status=req.params.status;
+        if(status && !allowedStatus.includes(status))
+            throw new Error("Bad Request");
+        next();
+    }
+    catch(e){
+        res.status(400).json({message:'falied',status:false,data:null});
+    }
+}
+module.exports={Validation,ValidationForUpdateProfile,ValidationForURL_SendConnection,ValidationForURL_ReviewConnection};
