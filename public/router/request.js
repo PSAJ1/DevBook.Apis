@@ -51,7 +51,7 @@ router.post("/send/:status/:toUserId",ValidationForURL_SendConnection,userAuth,a
 //#endregion
 
 //#region /review/:status/:toUserId (Status can be 2 or 3)
-router.post("/send/:status/:requestId",ValidationForURL_ReviewConnection,userAuth,async(req,res,next)=>{
+router.post("/review/:status/:requestId",ValidationForURL_ReviewConnection,userAuth,async(req,res,next)=>{
     try{
             const fromId = req.user.getUserId();
             const reqId = req.params.requestId;

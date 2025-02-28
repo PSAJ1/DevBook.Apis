@@ -4,14 +4,16 @@ const connectToDb = require("../config/db-configuration.js");
 const authRoute = require("./router/auth.js");
 const profileRoute = require("./router/profile.js");
 const requestRoute = require("./router/request.js");
+const userRoute = require("./router/user.js");
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/",authRoute);
+app.use("/user",userRoute);
 app.use("/profile",profileRoute);
 app.use("/request",requestRoute);
+app.use("/",authRoute);
 
 // const fieldsAllowedForUpdate = ['firstName','lastName','photoUrl','bio','skills','country'];
 // app.get("/user",async(req,res,next)=>{

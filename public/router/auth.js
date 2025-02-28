@@ -1,14 +1,14 @@
 const express=require("express");
 const validator = require("validator");
 const User = require("../model/user.js");
-const {validation} = require("../../utils/validator.js");
+const {Validation} = require("../../utils/validator.js");
 
 const router=express.Router();
 //#region Signup
 router.post("/signup",async(req,res,next)=>{
     try{
         // validating password
-        validation(req);
+        Validation(req);
         const user=new User({
             "firstName":req.body.firstName,
             "lastName":req.body.lastName,
