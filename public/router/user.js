@@ -1,6 +1,7 @@
 const express = require("express");
 const userAuth = require("../../auth-middlware");
-const ConnectionRequest = require("../model/connectionRequest");
+const ConnectionRequest = require("../model/connectionRequest.js");
+const User = require("../model/user.js");
 const router = express.Router();
 
 //#region Getting all pending request for logged in user
@@ -44,17 +45,24 @@ router.get("/connection",userAuth, async(req,res,next)=>{
 router.get("/feed",userAuth, async(req,res,next)=>{
     try{
         const logInId = req.user.getUserId();
-
-        let pendingReqList = await ConnectionRequest.find({
-            status:2,
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        let reqList = await ConnectionRequest.find({
             $or:[
                 {fromUserId:logInId},
                 {toUserId:logInId}
             ]
 
-        }).populate("fromUserId","firstName lastName").populate("toUserId","firstName lastName");
-    
-        return res.json({message:'Successfully',status:true,data:pendingReqList});
+        }).select("fromUserId toUserId");
+        let hideUsers = new Set();
+        reqList.forEach((req)=>{
+            hideUsers.add(req.fromUserId.toString());
+            hideUsers.add(req.toUserId.toString());
+        });
+
+        reqList = await User.find({_id:{$nin:Array.from(hideUsers)}}).skip((page-1)*limit).limit(limit).select("firstName lastName age dateOfBirth bio");
+
+        return res.json({message:'Successfully',status:true,data:reqList});
     }
     catch(e){
         res.status(400).json({message:'Bad request',status:false,data:[]});
