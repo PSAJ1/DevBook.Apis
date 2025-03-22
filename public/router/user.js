@@ -46,7 +46,8 @@ router.get("/feed",userAuth, async(req,res,next)=>{
     try{
         const logInId = req.user.getUserId();
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        let limit = parseInt(req.query.limit) || 10;
+        limit = limit > 50 ? 50 : limit;
         let reqList = await ConnectionRequest.find({
             $or:[
                 {fromUserId:logInId},
