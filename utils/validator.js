@@ -6,7 +6,7 @@ function Validation(req){
 }
 function ValidationForUpdateProfile(req){
     let isValid=false
-    const fieldsAllowedForUpdate = ['firstName','lastName','photoUrl','bio','skills','country'];
+    const fieldsAllowedForUpdate = ['firstName','lastName','photoUrl','bio',,'gender','skills','country'];
     let keys=Object.keys(req.body);
     if(keys && !keys.every(k=>fieldsAllowedForUpdate.includes(k)))
         throw new Error("Fields are not allowed for update");

@@ -18,6 +18,8 @@ router.post("/signup",async(req,res,next)=>{
         });
         // Encrypt th password
         await user.createPasswordHash();
+        //Get default photoUrl
+        await user.getDefaultPhotoURL();
         await user.save({ timestamps: { createdAt: true, updatedAt: false } });
         res.send("User created successfully");
     }
@@ -33,14 +35,14 @@ router.post("/login",async(req,res,next)=>{
         // validating email is valid or not
         if(req.body.email && req.body.password && !validator.isEmail(req.body.email))
             throw new Error("Invalid email format");
-        let userDetails= await User.findOne({email:req.body.email},["id","email","password","firstName","lastName"]);
+        let userDetails= await User.findOne({email:req.body.email});
         if(!userDetails)
             throw new Error("Invalid credentials");
         let isPasswordIsValid=await userDetails.verifyPassword(req.body.password);
         if(isPasswordIsValid){
             let token=userDetails.getJwtBadge();
             res.cookie("badge",token);
-            res.json({message:"LoggedIn successfully",status:true,data:{firstName:userDetails.firstName,lastName:userDetails.lastName,email:userDetails.email}});
+            res.json({message:"LoggedIn successfully",status:true,data:null});
         }
         else{
             res.json({message:"Invalid credentials",status:false,data:null});

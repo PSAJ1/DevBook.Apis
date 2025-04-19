@@ -4,13 +4,13 @@ async function userAuth(req,res,next){
     try{
         let token = req.cookies.badge;
         if(!token)
-            throw new Error("Token is not valid");
+            return res.status(401).send("Unauthorize");
 
         let userId=jwt.verify(token,"db@devBook_.2923");
 
         let user=await User.findById(userId,"id firstName lastName email");
         if(!user)
-            throw new Error("Unauthorized user");
+            return res.status(401).send("Unauthorize");
         req.user={
             getUserId:()=>user.id,
             getUserEmail:()=>user.email,

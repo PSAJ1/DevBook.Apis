@@ -9,7 +9,7 @@ router.get("/requests/received",userAuth, async(req,res,next)=>{
     try{
         const logInId = req.user.getUserId();
 
-        let pendingReqList = await ConnectionRequest.find({toUserId:logInId,status:0}).populate("fromUserId","firstName lastName");
+        let pendingReqList = await ConnectionRequest.find({toUserId:logInId,status:0}).populate("fromUserId","firstName lastName age photoUrl gender");
     
         return res.json({message:'Successfully',status:true,data:pendingReqList});
     }
@@ -31,7 +31,7 @@ router.get("/connection",userAuth, async(req,res,next)=>{
                 {toUserId:logInId}
             ]
 
-        }).populate("fromUserId","firstName lastName").populate("toUserId","firstName lastName");
+        }).populate("fromUserId","firstName lastName").populate("toUserId","firstName lastName age photoUrl gender");
     
         return res.json({message:'Successfully',status:true,data:pendingReqList});
     }
@@ -60,8 +60,12 @@ router.get("/feed",userAuth, async(req,res,next)=>{
             hideUsers.add(req.fromUserId.toString());
             hideUsers.add(req.toUserId.toString());
         });
-
-        reqList = await User.find({_id:{$nin:Array.from(hideUsers)}}).skip((page-1)*limit).limit(limit).select("firstName lastName age dateOfBirth bio");
+        //If there is no connection exist then add login user id to set
+        if(reqList && reqList.length === 0)
+        {
+            hideUsers.add(logInId);
+        }
+        reqList = await User.find({_id:{$nin:Array.from(hideUsers)}}).skip((page-1)*limit).limit(limit).select("firstName lastName age dateOfBirth bio photoUrl");
 
         return res.json({message:'Successfully',status:true,data:reqList});
     }

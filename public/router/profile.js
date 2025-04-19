@@ -6,7 +6,11 @@ const router=express.Router();
 //#region Profile/view
 router.get("/view",userAuth,async(req,res,next)=>{
     try{
-        res.send("Profile "+req.user.getUserFullName());
+        const user = await User.findOne({_id:req.user.getUserId()},["email","firstName","lastName","bio","skills","gender","age","dateOfBirth","phoneNumber","country","photoUrl"]);
+        if(user)
+            res.json({status:true,message:'',data:user});
+        else
+            res.json({status:false,message:'Something went wrong',data:null})
     }
     catch(e){
         res.status(501).send("Users not found "+e.message);
@@ -20,10 +24,10 @@ router.patch("/edit",userAuth,async(req,res,next)=>{
         if(!ValidationForUpdateProfile(req))
             throw new Error("Validation Failed");
 
-        let updateUser=new User({
+        let updateUser={
             ...req.body
-        });
-        let u=await User.findByIdAndUpdate(req.user.getUserId(),req.body,{returnDocument:"after",runValidators:true});
+        };
+        let u=await User.findByIdAndUpdate(req.user.getUserId(),updateUser,{returnDocument:"after",runValidators:true});
         res.send(u)
     }
     catch(e){

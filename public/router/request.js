@@ -42,7 +42,7 @@ router.post("/send/:status/:toUserId",ValidationForURL_SendConnection,userAuth,a
             });
 
             ConnectionReq = await ConnectionReq.save({ timestamps: { createdAt: true, updatedAt: false } });
-            res.json({message:'Successfully',status:true,data:ConnectionReq});
+            res.json({message:'Successfully',status:true,data:null});
         }
     catch(e){
         res.status(400).send("Error found:- "+e.message);

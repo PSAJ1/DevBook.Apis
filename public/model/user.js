@@ -101,6 +101,12 @@ userScheme.methods.createPasswordHash=async function(){
     passwordHash=await bcrypt.hash(password,15);
     this.password=passwordHash;
 };
+
+//According to first name first character and last name first character combination to get photo URL
+userScheme.methods.getDefaultPhotoURL=function(){
+    let URL=`https://api.dicebear.com/9.x/initials/svg?seed=${this.firstName[0]+this.lastName[0]}`
+    this.photoUrl=URL;
+};
 const User = mongoose.model('User',userScheme);
 
 module.exports = User;
