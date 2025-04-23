@@ -24,16 +24,24 @@ router.get("/connection",userAuth, async(req,res,next)=>{
     try{
         const logInId = req.user.getUserId();
 
-        let pendingReqList = await ConnectionRequest.find({
+        let connList = await ConnectionRequest.find({
             status:2,
             $or:[
                 {fromUserId:logInId},
                 {toUserId:logInId}
             ]
 
-        }).populate("fromUserId","firstName lastName").populate("toUserId","firstName lastName age photoUrl gender");
+        }).populate("fromUserId","firstName lastName age photoUrl gender").populate("toUserId","firstName lastName age photoUrl gender");
+        let newConnList = connList.map((conn)=>{
+            if(conn.fromUserId._id.toString() === logInId){
+                return conn.toUserId;
+            }
+            else {
+                return conn.fromUserId
+            }
+        });
     
-        return res.json({message:'Successfully',status:true,data:pendingReqList});
+        return res.json({message:'Successfully',status:true,data:newConnList});
     }
     catch(e){
         res.status(400).json({message:'Bad request',status:false,data:[]});
