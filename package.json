@@ -4,8 +4,8 @@
   "description": "It is a type of social media for developer(Devbook) just like a facebook. ",
   "main": "index.js",
   "scripts": {
-    "start": "node public/app.js",
-    "dev": "nodemon public/app.js"
+    "start": "node --env-file=.env public/app.js",
+    "dev": "nodemon --env-file=.env public/app.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/PSAJ1/DevBook.Apis#readme",
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.799.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",

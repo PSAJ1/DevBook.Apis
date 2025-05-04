@@ -3,6 +3,8 @@ const ConnectionRequest = require("../model/connectionRequest.js");
 const User = require("../model/user.js");
 const userAuth = require("../../auth-middlware/index.js");
 const {ValidationForURL_SendConnection,ValidationForURL_ReviewConnection} = require("../../utils/validator.js");
+const { SendEmailFromNoReply } = require("../../utils/Email/sendEmail.js");
+
 /*
     -: Status :-
     0 = interested
@@ -17,7 +19,7 @@ router.post("/send/:status/:toUserId",ValidationForURL_SendConnection,userAuth,a
     try{
             const fromId = req.user.getUserId();
             const toId = req.params.toUserId;
-            const status = req.params.status;
+            const status = parseInt(req.params.status);
             let userExist = await User.findById(toId);
             if(!userExist)
                 return res.status(200).json({message:'User not found',status:true,data:null});
@@ -42,6 +44,11 @@ router.post("/send/:status/:toUserId",ValidationForURL_SendConnection,userAuth,a
             });
 
             ConnectionReq = await ConnectionReq.save({ timestamps: { createdAt: true, updatedAt: false } });
+            if(status===0)
+            {
+                let res = await SendEmailFromNoReply("shah1999pankaj@gmail.com","Connection Request sent",`<h3>DevBook</h3>`);
+                console.log("Email response:- ",res);
+            }
             res.json({message:'Successfully',status:true,data:null});
         }
     catch(e){

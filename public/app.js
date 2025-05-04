@@ -101,7 +101,7 @@ app.use('/',(err,req,res,next)=>{
 
 connectToDb().then(()=>{
     console.log("Database connection establish..")
-    app.listen(3000,()=>{
+    app.listen(process.env.PORT,()=>{
         console.log("Server is running on port 3000.")
     });
 }).catch((err)=>{

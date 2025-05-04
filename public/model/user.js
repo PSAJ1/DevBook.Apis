@@ -84,7 +84,7 @@ const userScheme = mongoose.Schema({
 },{timestamps:true});
 userScheme.methods.getJwtBadge=function(){
     let user=this;
-    let token=jwt.sign(`${user.id}`,"db@devBook_.2923");
+    let token=jwt.sign(`${user.id}`,process.env.JWT_SECERT);
     if(!token)
         throw new Error("Token is not generated");
     return token;
